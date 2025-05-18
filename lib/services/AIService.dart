@@ -5,7 +5,7 @@ class AIService {
   final String _apiUrl =
       'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
 
-  final String _apiKey = 'AIzaSyCHD1ZDe2pn7nL9LhTfEvWG3uAGBA84sIk';
+  final String _apiKey = '';
 
   final Map<String, String> _expertPersonas = {
     'coding': '''

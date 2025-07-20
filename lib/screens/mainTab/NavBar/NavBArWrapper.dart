@@ -27,13 +27,15 @@ class _NavbarwrapperState extends State<Navbarwrapper> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: CustomNavBar(
-          homeScreenController: _homeController,
-          child: Obx(() => IndexedStack(
-                index: _homeController.selectedIndex.value,
-                children: _screens,
-              )),
-        ));
+      resizeToAvoidBottomInset: false,
+      body: Obx(() => IndexedStack(
+            index: _homeController.selectedIndex.value,
+            children: _screens,
+          )),
+      bottomNavigationBar: CustomNavBar(
+        homeScreenController: _homeController,
+        child: SizedBox.shrink(), // Not used anymore
+      ),
+    );
   }
 }

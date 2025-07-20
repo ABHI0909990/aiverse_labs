@@ -1,11 +1,13 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:get/get.dart';
 import '../../../constant/assets.dart';
 import '../../../constant/font_family.dart';
 import '../HomeScreen/HomeScreenController.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:flutter/physics.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomNavBar extends StatefulWidget {
   final HomeScreenController homeScreenController;
@@ -49,16 +51,16 @@ class _CustomNavBarState extends State<CustomNavBar>
       ),
     );
 
-    ever(widget.homeScreenController.selectedIndex, (index) {
+    // Listen to index changes
+    widget.homeScreenController.selectedIndex.listen((index) {
       _animateIndicatorToIndex(index);
     });
   }
 
   void _animateIndicatorToIndex(int index) {
-    final screenWidth = 100.w;
+    final screenWidth = MediaQuery.of(context).size.width;
     final itemWidth = screenWidth / 4;
     final newPosition = index * itemWidth;
-
     _indicatorPosition = Tween<double>(
       begin: _indicatorPosition.value,
       end: newPosition,
@@ -68,9 +70,7 @@ class _CustomNavBarState extends State<CustomNavBar>
         curve: Curves.easeOutCubic,
       ),
     );
-
-    _indicatorController.reset();
-    _indicatorController.forward();
+    _indicatorController.forward(from: 0);
   }
 
   @override
@@ -82,226 +82,321 @@ class _CustomNavBarState extends State<CustomNavBar>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final itemWidth = screenWidth / 4;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: BottomBar(
-        fit: StackFit.expand,
-        borderRadius: BorderRadius.circular(30),
-        barColor: Colors.transparent,
-        showIcon: false,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        body: (context, controller) => SafeArea(
-          child: widget.child,
-        ),
-        width: 200.w,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 1.5.h, left: 3.w, right: 3.w),
-          child: Container(
-            height: 11.h,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isDark
-                    ? [
-                        theme.cardColor,
-                        theme.cardColor.withOpacity(0.9),
-                      ]
-                    : [
-                        Colors.white,
-                        Colors.white.withOpacity(0.9),
-                      ],
-              ),
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.05),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: isDark
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.black.withOpacity(0.1),
-                  blurRadius: 15,
-                  spreadRadius: 1,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    AnimatedBuilder(
-                      animation: _indicatorController,
-                      builder: (context, child) {
-                        return Positioned(
-                          left: _indicatorPosition.value,
-                          top: 0,
-                          child: Container(
-                            width: 100.w / 4,
-                            height: 3,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(3),
-                                bottomRight: Radius.circular(3),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: theme.colorScheme.primary
-                                      .withOpacity(0.5),
-                                  blurRadius: 8,
-                                  spreadRadius: -2,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(
-                        4,
-                        (index) => _buildNavItem(
-                          imagePath: _icons[index],
-                          label: _labels[index],
-                          index: index,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+    return Container(
+      height: 80.0,
+      margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withOpacity(0.1),
+            blurRadius: 20,
+            offset: Offset(0, 10),
           ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Stack(
+          children: [
+            // Animated indicator
+            AnimatedBuilder(
+              animation: _indicatorPosition,
+              builder: (context, child) {
+                return Positioned(
+                  left: _indicatorPosition.value,
+                  child: Container(
+                    width: itemWidth,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary.withOpacity(0.1),
+                          theme.colorScheme.primary.withOpacity(0.05),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                );
+              },
+            ),
+            // Navigation items
+            Obx(() => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                    _labels.length,
+                    (index) => _buildNavItem(
+                      context,
+                      index: index,
+                      label: _labels[index],
+                      icon: _icons[index],
+                      isSelected:
+                          widget.homeScreenController.selectedIndex.value ==
+                              index,
+                    ),
+                  ),
+                )),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem({
-    required String imagePath,
-    required String label,
+  Widget _buildNavItem(
+    BuildContext context, {
     required int index,
+    required String label,
+    required String icon,
+    required bool isSelected,
   }) {
-    return Obx(() {
-      final bool isSelected =
-          widget.homeScreenController.selectedIndex.value == index;
-      final theme = Theme.of(context);
+    final theme = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final itemWidth = screenWidth / 4;
 
-      return Tooltip(
-        message: label,
-        preferBelow: false,
-        verticalOffset: 20,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => widget.homeScreenController.changeIndex(index),
-            borderRadius: BorderRadius.circular(20),
-            splashColor: theme.colorScheme.primary.withOpacity(0.1),
-            highlightColor: theme.colorScheme.primary.withOpacity(0.05),
-            child: Container(
-              width: 21.w,
-              height: 11.h,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  AnimatedOpacity(
-                    opacity: isSelected ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: 18.w,
-                      height: 7.h,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TweenAnimationBuilder<double>(
-                        tween: Tween<double>(
-                          begin: 0.8,
-                          end: isSelected ? 1.0 : 0.8,
-                        ),
-                        duration: const Duration(milliseconds: 200),
-                        curve: Curves.easeOutCubic,
-                        builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: value,
-                            child: child,
-                          );
-                        },
-                        child: Image.asset(
-                          imagePath,
-                          width: 7.w,
-                          height: 3.5.h,
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.iconTheme.color?.withOpacity(0.7),
-                        ),
-                      ),
-                      SizedBox(height: 0.8.h),
-                      AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        style: TextStyle(
-                          fontFamily: isSelected
-                              ? AppFonts.family2SemiBold
-                              : AppFonts.family2Regular,
-                          fontSize: 12.sp,
-                          color: isSelected
-                              ? theme.colorScheme.primary
-                              : theme.textTheme.bodyMedium?.color
-                                  ?.withOpacity(0.7),
-                        ),
-                        child: Text(label),
-                      ),
-                    ],
-                  ),
-                  if (isSelected)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        child: TweenAnimationBuilder<double>(
-                          tween: Tween<double>(begin: 0.0, end: 1.0),
-                          duration: const Duration(milliseconds: 700),
-                          curve: Curves.elasticOut,
-                          builder: (context, value, child) {
-                            return Transform.scale(
-                              scale: value,
-                              child: Opacity(
-                                opacity: (1 - value).clamp(0.0, 0.5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: theme.colorScheme.primary
-                                        .withOpacity(0.2),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                ],
+    return GestureDetector(
+      onTap: () => widget.homeScreenController.changeTab(index),
+      child: Container(
+        width: itemWidth,
+        height: 80,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? theme.colorScheme.primary.withOpacity(0.1)
+                    : Colors.transparent,
+                shape: BoxShape.circle,
               ),
+              child: _buildNavIcon(icon, isSelected, theme),
+            ),
+            SizedBox(height: 4),
+            AnimatedDefaultTextStyle(
+              duration: Duration(milliseconds: 200),
+              style: TextStyle(
+                fontFamily: AppFonts.family2Medium,
+                fontSize: 12,
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface.withOpacity(0.6),
+              ),
+              child: Text(label),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavIcon(String iconPath, bool isSelected, ThemeData theme) {
+    return AnimatedScale(
+      scale: isSelected ? 1.2 : 1.0,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.elasticOut,
+      child: Image.asset(
+        iconPath,
+        width: 24,
+        height: 24,
+        color: isSelected
+            ? theme.colorScheme.primary
+            : theme.colorScheme.onSurface.withOpacity(0.6),
+        errorBuilder: (context, error, stackTrace) {
+          // Fallback to Material Icons if asset fails to load
+          IconData fallbackIcon;
+          switch (iconPath) {
+            case AppImages.home:
+              fallbackIcon = Icons.home;
+              break;
+            case AppImages.heart:
+              fallbackIcon = Icons.favorite;
+              break;
+            case AppImages.search:
+              fallbackIcon = Icons.search;
+              break;
+            case AppImages.profile:
+              fallbackIcon = Icons.person;
+              break;
+            default:
+              fallbackIcon = Icons.circle;
+          }
+
+          return Icon(
+            fallbackIcon,
+            size: 24,
+            color: isSelected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurface.withOpacity(0.6),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class AnimatedGradientBackground extends StatefulWidget {
+  final Widget child;
+  const AnimatedGradientBackground({required this.child, Key? key})
+      : super(key: key);
+
+  @override
+  State<AnimatedGradientBackground> createState() =>
+      _AnimatedGradientBackgroundState();
+}
+
+class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Color?> _color1;
+  late Animation<Color?> _color2;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _color1 = ColorTween(
+      begin: Colors.blue.shade200,
+      end: Colors.purple.shade200,
+    ).animate(_controller);
+
+    _color2 = ColorTween(
+      begin: Colors.pink.shade100,
+      end: Colors.orange.shade100,
+    ).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [_color1.value!, _color2.value!],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-        ),
-      );
-    });
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+class WiggleOnError extends StatefulWidget {
+  final bool hasError;
+  final Widget child;
+  const WiggleOnError({required this.hasError, required this.child, Key? key})
+      : super(key: key);
+
+  @override
+  State<WiggleOnError> createState() => _WiggleOnErrorState();
+}
+
+class _WiggleOnErrorState extends State<WiggleOnError>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _offset;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 400),
+      vsync: this,
+    );
+    _offset = TweenSequence([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -10.0), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: -10.0, end: 10.0), weight: 2),
+      TweenSequenceItem(tween: Tween(begin: 10.0, end: 0.0), weight: 1),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticIn));
+  }
+
+  @override
+  void didUpdateWidget(covariant WiggleOnError oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.hasError && !oldWidget.hasError) {
+      _controller.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _offset,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(_offset.value, 0),
+          child: widget.child,
+        );
+      },
+    );
+  }
+}
+
+class PulsingFAB extends StatefulWidget {
+  final VoidCallback onPressed;
+  final Widget icon;
+  const PulsingFAB({required this.onPressed, required this.icon, Key? key})
+      : super(key: key);
+
+  @override
+  State<PulsingFAB> createState() => _PulsingFABState();
+}
+
+class _PulsingFABState extends State<PulsingFAB>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+      lowerBound: 0.9,
+      upperBound: 1.1,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScaleTransition(
+      scale: _controller,
+      child: FloatingActionButton(
+        onPressed: widget.onPressed,
+        child: widget.icon,
+      ),
+    );
   }
 }

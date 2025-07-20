@@ -43,11 +43,15 @@ class HomeScreenController extends BaseController {
   }
 
   void changeTab(int index) {
-    selectedTab.value = index;
+    selectedIndex.value = index;
   }
 
   void changeIndex(int index) {
     selectedIndex.value = index;
+  }
+
+  void changeFilterTab(int index) {
+    selectedTab.value = index;
   }
 
   bool hasAccessToExpert(Map<String, dynamic> expert) {
@@ -129,122 +133,183 @@ class HomeScreenController extends BaseController {
   final List<Map<String, dynamic>> experts = [
     {
       'name': 'Ethan Harper',
-      'expertise': 'Coding, Machine Learning',
-      'rating': '4.8',
+      'expertise': 'AI & Machine Learning Engineering',
+      'rating': '4.9',
       'image': AppImages.ethanHarper,
       'proOnly': false,
       'collegeDegree': 'Computer Science',
       'description':
-          'Expert in Python, TensorFlow, and AI model development. Can help with code optimization and AI solutions.'
+          'Senior AI Engineer specializing in deep learning, neural networks, and computer vision. Expert in PyTorch, TensorFlow, and model optimization. Can help with AI model development, training, and deployment.',
+      'availability': 'Available',
+      'experience': '10 years',
+      'languages': ['English', 'Spanish'],
+      'hourlyRate': 95,
+      'responseTime': 'Within 1 hour'
     },
     {
       'name': 'Olivia Bennett',
-      'expertise': 'AI Ethics, Machine Learning',
-      'rating': '4.8',
+      'expertise': 'AI Ethics & Responsible AI',
+      'rating': '4.9',
       'image': AppImages.oliviaBennett,
       'proOnly': false,
       'collegeDegree': 'Computer Science',
       'description':
-          'Expert in AI ethics, responsible AI development, and machine learning algorithms.'
+          'AI Ethics Specialist focusing on responsible AI development, bias mitigation, and ethical AI governance. Expert in AI safety, fairness, and transparency. Helps organizations implement ethical AI practices.',
+      'availability': 'Available',
+      'experience': '8 years',
+      'languages': ['English', 'French'],
+      'hourlyRate': 90,
+      'responseTime': 'Within 2 hours'
     },
     {
       'name': 'Noah Sullivan',
-      'expertise': 'Database Systems, Cloud Computing',
-      'rating': '4.7',
+      'expertise': 'Cloud Architecture & Distributed Systems',
+      'rating': '4.9',
       'image': AppImages.noahSullivan,
       'proOnly': true,
       'collegeDegree': 'Computer Science',
       'description':
-          'Specialist in database design, cloud architecture, and scalable distributed systems.'
+          'Cloud Architect specializing in scalable distributed systems, microservices architecture, and cloud-native applications. Expert in AWS, Azure, and GCP. Helps design and optimize cloud infrastructure.',
+      'availability': 'Busy',
+      'experience': '12 years',
+      'languages': ['English', 'German'],
+      'hourlyRate': 120,
+      'responseTime': 'Within 3 hours'
     },
     {
       'name': 'Lucas Reed',
-      'expertise': 'Web Development, JavaScript',
+      'expertise': 'Full-Stack Development & Web Architecture',
       'rating': '4.9',
       'image': AppImages.lucasReed,
       'proOnly': false,
       'collegeDegree': 'Information Technology',
       'description':
-          'Specializes in modern web frameworks like React, Vue, and Angular. Can assist with full-stack development.'
+          'Full-stack developer specializing in modern web technologies. Expert in React, Vue, Node.js, and cloud deployment. Helps build scalable web applications and optimize performance.',
+      'availability': 'Available',
+      'experience': '9 years',
+      'languages': ['English', 'Portuguese'],
+      'hourlyRate': 85,
+      'responseTime': 'Within 1 hour'
     },
     {
       'name': 'Ava Patel',
-      'expertise': 'Network Security, Cybersecurity',
+      'expertise': 'Cybersecurity & Ethical Hacking',
       'rating': '4.9',
       'image': AppImages.avaPatel,
       'proOnly': true,
       'collegeDegree': 'Information Technology',
       'description':
-          'Expert in cybersecurity, penetration testing, and network security best practices.'
+          'Cybersecurity expert specializing in penetration testing, security architecture, and threat intelligence. Certified ethical hacker with expertise in network security and incident response.',
+      'availability': 'Available',
+      'experience': '11 years',
+      'languages': ['English', 'Hindi'],
+      'hourlyRate': 110,
+      'responseTime': 'Within 2 hours'
     },
     {
       'name': 'Liam Foster',
-      'expertise': 'Mobile Development, Flutter',
-      'rating': '4.7',
+      'expertise': 'Mobile App Development & UI/UX',
+      'rating': '4.8',
       'image': AppImages.liamFoster,
       'proOnly': true,
       'collegeDegree': 'Engineering',
       'description':
-          'Expert in Flutter and React Native. Can help with mobile app architecture and optimization.'
+          'Mobile development specialist focusing on Flutter, React Native, and native iOS/Android. Expert in mobile UI/UX design, performance optimization, and app architecture.',
+      'availability': 'Busy',
+      'experience': '7 years',
+      'languages': ['English'],
+      'hourlyRate': 90,
+      'responseTime': 'Within 4 hours'
     },
     {
-      'name': 'Isabella Hayes',
-      'expertise': 'UX/UI Design, Product Development',
+      'name': 'Sarah Chen',
+      'expertise': 'Data Science & Machine Learning',
       'rating': '4.9',
       'image': AppImages.isabellaHayes,
-      'proOnly': false,
-      'collegeDegree': 'Engineering',
+      'proOnly': true,
+      'collegeDegree': 'Computer Science',
       'description':
-          'Specializes in user experience design and product development. Helps create intuitive interfaces.'
+          'Data Scientist specializing in machine learning, statistical analysis, and big data processing. Expert in Python, R, and data visualization. Helps organizations leverage data for insights.',
+      'availability': 'Available',
+      'experience': '10 years',
+      'languages': ['English', 'Mandarin'],
+      'hourlyRate': 105,
+      'responseTime': 'Within 2 hours'
     },
     {
-      'name': 'Daniel Carter',
-      'expertise': 'Mechanical Engineering, Robotics',
-      'rating': '4.6',
+      'name': 'Marcus Johnson',
+      'expertise': 'DevOps & Cloud Infrastructure',
+      'rating': '4.9',
       'image': AppImages.danielCarter,
       'proOnly': true,
-      'collegeDegree': 'Engineering',
-      'description': 'Expert in robotics, mechanical design, and automation.'
+      'collegeDegree': 'Information Technology',
+      'description':
+          'DevOps Engineer specializing in CI/CD, infrastructure as code, and cloud automation. Expert in Kubernetes, Docker, and cloud platforms. Helps streamline development and deployment processes.',
+      'availability': 'Available',
+      'experience': '9 years',
+      'languages': ['English', 'Spanish'],
+      'hourlyRate': 100,
+      'responseTime': 'Within 3 hours'
     },
     {
-      'name': 'Grace Mitchell',
-      'expertise': 'Business Strategy, Marketing',
-      'rating': '4.6',
+      'name': 'Priya Sharma',
+      'expertise': 'Blockchain & Web3 Development',
+      'rating': '4.8',
       'image': AppImages.graceMitchell,
       'proOnly': true,
-      'collegeDegree': 'Business Administration',
+      'collegeDegree': 'Computer Science',
       'description':
-          'Specializes in business strategy, market analysis, and growth marketing.'
+          'Blockchain developer specializing in smart contracts, DeFi, and Web3 applications. Expert in Solidity, Ethereum, and decentralized systems. Helps build secure blockchain solutions.',
+      'availability': 'Busy',
+      'experience': '8 years',
+      'languages': ['English', 'Hindi'],
+      'hourlyRate': 115,
+      'responseTime': 'Within 4 hours'
     },
     {
-      'name': 'Henry Parker',
-      'expertise': 'Marketing Analytics, Digital Marketing',
+      'name': 'Alex Rivera',
+      'expertise': 'Game Development & Graphics Programming',
       'rating': '4.8',
       'image': AppImages.henryParker,
-      'proOnly': false,
-      'collegeDegree': 'Business Administration',
+      'proOnly': true,
+      'collegeDegree': 'Computer Science',
       'description':
-          'Specialist in marketing analytics, digital strategies, and consumer behavior.'
+          'Game developer specializing in Unity, Unreal Engine, and graphics programming. Expert in game physics, 3D modeling, and real-time rendering. Helps create immersive gaming experiences.',
+      'availability': 'Available',
+      'experience': '7 years',
+      'languages': ['English', 'Spanish'],
+      'hourlyRate': 95,
+      'responseTime': 'Within 2 hours'
     },
     {
-      'name': 'Sophia Turner',
-      'expertise': 'Healthcare, Medical Research',
+      'name': 'Yuki Tanaka',
+      'expertise': 'Robotics & Embedded Systems',
       'rating': '4.9',
       'image': AppImages.sophiaTurner,
       'proOnly': true,
-      'collegeDegree': 'Medicine',
+      'collegeDegree': 'Engineering',
       'description':
-          'Expert in medical research, healthcare systems, and clinical data analysis.'
+          'Robotics engineer specializing in embedded systems, control systems, and automation. Expert in ROS, Arduino, and real-time systems. Helps develop robotic solutions and automation systems.',
+      'availability': 'Available',
+      'experience': '9 years',
+      'languages': ['English', 'Japanese'],
+      'hourlyRate': 110,
+      'responseTime': 'Within 3 hours'
     },
     {
-      'name': 'Benjamin Collins',
-      'expertise': 'Clinical Research, Pharmacology',
-      'rating': '4.7',
+      'name': 'David Kim',
+      'expertise': 'Quantum Computing & Cryptography',
+      'rating': '4.9',
       'image': AppImages.benjaminCollins,
       'proOnly': true,
-      'collegeDegree': 'Medicine',
+      'collegeDegree': 'Computer Science',
       'description':
-          'Expert in pharmacology, drug development, and clinical research.'
+          'Quantum computing researcher specializing in quantum algorithms and cryptography. Expert in quantum programming and post-quantum cryptography. Helps organizations prepare for quantum computing.',
+      'availability': 'Busy',
+      'experience': '12 years',
+      'languages': ['English', 'Korean'],
+      'hourlyRate': 130,
+      'responseTime': 'Within 4 hours'
     },
   ].obs;
 

@@ -18,7 +18,6 @@ class HomeScreen extends BaseView<HomeScreenController> {
 
   @override
   Widget vBuilder(BuildContext context) {
-    
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -144,14 +143,13 @@ class HomeScreen extends BaseView<HomeScreenController> {
             itemCount: controller.collegeDegrees.length,
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             itemBuilder: (context, index) {
-              final isSelected = controller.selectedIndex
-              .value == index;
+              final isSelected = controller.selectedTab.value == index;
               return Padding(
                 padding: EdgeInsets.only(right: 8),
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () => controller.changeTab(index),
+                    onTap: () => controller.changeFilterTab(index),
                     borderRadius: BorderRadius.circular(16),
                     child: AnimatedContainer(
                       duration: Duration(milliseconds: 300),
@@ -183,18 +181,16 @@ class HomeScreen extends BaseView<HomeScreenController> {
                               ]
                             : null,
                       ),
-                      child: Center(
-                        child: Text(
-                          controller.collegeDegrees[index],
-                          style: TextStyle(
-                            fontFamily: isSelected
-                                ? AppFonts.family2SemiBold
-                                : AppFonts.family2Regular,
-                            fontSize: 14.sp,
-                            color: isSelected
-                                ? Colors.white
-                                : theme.textTheme.bodyMedium?.color,
-                          ),
+                      child: Text(
+                        controller.collegeDegrees[index],
+                        style: TextStyle(
+                          fontFamily: isSelected
+                              ? AppFonts.family2SemiBold
+                              : AppFonts.family2Regular,
+                          fontSize: 14.sp,
+                          color: isSelected
+                              ? Colors.white
+                              : theme.textTheme.bodyMedium?.color,
                         ),
                       ),
                     ),
@@ -343,6 +339,9 @@ class HomeScreen extends BaseView<HomeScreenController> {
                 fontSize: 14.sp,
               ),
             ),
+            tooltip: isProUser
+                ? 'Cancel Pro subscription'
+                : 'Activate Pro subscription',
           ),
         ),
       );

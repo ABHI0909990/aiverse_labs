@@ -27,142 +27,144 @@ class ProfileScreen extends BaseView<ProfileScreenController> {
         ),
         elevation: 0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              theme.scaffoldBackgroundColor,
-              theme.scaffoldBackgroundColor.withOpacity(0.8),
-            ],
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                theme.scaffoldBackgroundColor,
+                theme.scaffoldBackgroundColor.withOpacity(0.8),
+              ],
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.all(16.sp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Profile Image with animation
-                Hero(
-                  tag: 'profile-image',
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 500),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 2,
-                        ),
-                      ],
-                    ),
-                    child: CircleAvatar(
-                      radius: 50.sp,
-                      backgroundImage: AssetImage(AppImages.profilePic),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: theme.colorScheme.primary.withOpacity(0.5),
-                            width: 4,
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Profile Image with animation
+                  Hero(
+                    tag: 'profile-image',
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 500),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withOpacity(0.3),
+                            blurRadius: 20,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: CircleAvatar(
+                        radius: 50.0,
+                        backgroundImage: AssetImage(AppImages.profilePic),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: theme.colorScheme.primary.withOpacity(0.5),
+                              width: 4,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 16.sp),
+                  SizedBox(height: 16.0),
 
-                // User name with animation
-                Obx(() => AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      child: Text(
-                        controller.userName.value,
-                        key: ValueKey<String>(controller.userName.value),
-                        style: TextStyle(
-                          fontFamily: AppFonts.family2Bold,
-                          fontSize: 20.sp,
-                          shadows: [
-                            Shadow(
-                              color: theme.shadowColor.withOpacity(0.1),
-                              blurRadius: 2,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
+                  // User name with animation
+                  Obx(() => AnimatedSwitcher(
+                        duration: Duration(milliseconds: 300),
+                        child: Text(
+                          controller.userName.value,
+                          key: ValueKey<String>(controller.userName.value),
+                          style: TextStyle(
+                            fontFamily: AppFonts.family2Bold,
+                            fontSize: 20.sp,
+                            shadows: [
+                              Shadow(
+                                color: theme.shadowColor.withOpacity(0.1),
+                                blurRadius: 2,
+                                offset: Offset(1, 1),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )),
-                SizedBox(height: 8.sp),
+                      )),
+                  SizedBox(height: 8.sp),
 
-                // User email with animation
-                Obx(() => AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      child: Text(
-                        controller.userEmail.value.isEmpty
-                            ? 'No email provided'
-                            : controller.userEmail.value,
-                        key: ValueKey<String>(controller.userEmail.value),
-                        style: TextStyle(
-                          fontFamily: AppFonts.family2Regular,
-                          fontSize: 16.sp,
-                          color: theme.textTheme.bodyMedium?.color
-                              ?.withOpacity(0.7),
+                  // User email with animation
+                  Obx(() => AnimatedSwitcher(
+                        duration: Duration(milliseconds: 300),
+                        child: Text(
+                          controller.userEmail.value.isEmpty
+                              ? 'No email provided'
+                              : controller.userEmail.value,
+                          key: ValueKey<String>(controller.userEmail.value),
+                          style: TextStyle(
+                            fontFamily: AppFonts.family2Regular,
+                            fontSize: 16.sp,
+                            color: theme.textTheme.bodyMedium?.color
+                                ?.withOpacity(0.7),
+                          ),
                         ),
-                      ),
-                    )),
-                SizedBox(height: 32.sp),
+                      )),
+                  SizedBox(height: 32.sp),
 
-                // Animated cards
-                _buildAnimatedCard(
-                  context,
-                  index: 0,
-                  child: _buildAppearanceCard(context),
-                ),
-                SizedBox(height: 24.sp),
-
-                _buildAnimatedCard(
-                  context,
-                  index: 1,
-                  child: _buildSubscriptionCard(controller, context),
-                ),
-                SizedBox(height: 32.sp),
-
-                // Action buttons with animations
-                _buildAnimatedButton(
-                  context,
-                  index: 2,
-                  child: _buildActionButton(
-                    context: context,
-                    icon: Icons.edit,
-                    label: 'Edit Profile',
-                    onTap: () => _showEditProfileDialog(context, controller),
+                  // Animated cards
+                  _buildAnimatedCard(
+                    context,
+                    index: 0,
+                    child: _buildAppearanceCard(context),
                   ),
-                ),
-                SizedBox(height: 16.sp),
+                  SizedBox(height: 24.sp),
 
-                Obx(() => _buildAnimatedButton(
-                      context,
-                      index: 3,
-                      child: controller.isLoggedIn.value
-                          ? _buildActionButton(
-                              context: context,
-                              icon: Icons.logout,
-                              label: 'Sign Out',
-                              onTap: () => controller.signOut(),
-                            )
-                          : _buildActionButton(
-                              context: context,
-                              icon: Icons.login,
-                              label: 'Sign In',
-                              onTap: () =>
-                                  _showEditProfileDialog(context, controller),
-                            ),
-                    )),
-              ],
+                  _buildAnimatedCard(
+                    context,
+                    index: 1,
+                    child: _buildSubscriptionCard(controller, context),
+                  ),
+                  SizedBox(height: 32.sp),
+
+                  // Action buttons with animations
+                  _buildAnimatedButton(
+                    context,
+                    index: 2,
+                    child: _buildActionButton(
+                      context: context,
+                      icon: Icons.edit,
+                      label: 'Edit Profile',
+                      onTap: () => _showEditProfileDialog(context, controller),
+                    ),
+                  ),
+                  SizedBox(height: 16.sp),
+
+                  Obx(() => _buildAnimatedButton(
+                        context,
+                        index: 3,
+                        child: controller.isLoggedIn.value
+                            ? _buildActionButton(
+                                context: context,
+                                icon: Icons.logout,
+                                label: 'Sign Out',
+                                onTap: () => controller.signOut(),
+                              )
+                            : _buildActionButton(
+                                context: context,
+                                icon: Icons.login,
+                                label: 'Sign In',
+                                onTap: () =>
+                                    _showEditProfileDialog(context, controller),
+                              ),
+                      )),
+                ],
+              ),
             ),
           ),
         ),

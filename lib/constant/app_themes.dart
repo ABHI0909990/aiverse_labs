@@ -54,7 +54,8 @@ class AppThemes {
       titleTextStyle: TextStyle(
         color: AppColors.primaryTextColor,
         fontFamily: AppFonts.family2SemiBold,
-        fontSize: 18,
+        fontSize: 20,
+        letterSpacing: -0.5,
       ),
       toolbarHeight: 70,
       centerTitle: false,
@@ -62,23 +63,28 @@ class AppThemes {
     ),
     cardTheme: CardTheme(
       color: AppColors.white,
-      elevation: 2,
+      elevation: 4,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
       ),
-      shadowColor: AppColors.primaryColor.withOpacity(0.1),
+      shadowColor: AppColors.primaryColor.withOpacity(0.15),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.buttonColor,
         foregroundColor: AppColors.buttonTextColor,
-        elevation: 3,
+        elevation: 4,
         shadowColor: AppColors.primaryColor.withOpacity(0.3),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        textStyle: TextStyle(
+          fontFamily: AppFonts.family2SemiBold,
+          fontSize: 16,
+          letterSpacing: 0.5,
+        ),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
@@ -92,86 +98,56 @@ class AppThemes {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.lightGrey,
+      fillColor: AppColors.white,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.primaryColor.withOpacity(0.2)),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.primaryColor.withOpacity(0.2)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.primaryColor, width: 2),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.primaryColor, width: 2),
       ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       hintStyle: TextStyle(
-        color: AppColors.secondaryTextColor.withOpacity(0.7),
+        color: AppColors.primaryTextColor.withOpacity(0.5),
         fontFamily: AppFonts.family2Regular,
       ),
     ),
     fontFamily: AppFonts.family2Regular,
-    textTheme: const TextTheme(
+    textTheme: TextTheme(
       displayLarge: TextStyle(
-        color: AppColors.primaryTextColor,
         fontFamily: AppFonts.family2Bold,
+        fontSize: 32,
+        letterSpacing: -1,
+        color: AppColors.primaryTextColor,
       ),
       displayMedium: TextStyle(
-        color: AppColors.primaryTextColor,
         fontFamily: AppFonts.family2Bold,
-      ),
-      displaySmall: TextStyle(
+        fontSize: 28,
+        letterSpacing: -0.5,
         color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2Bold,
-      ),
-      headlineLarge: TextStyle(
-        color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2SemiBold,
-      ),
-      headlineMedium: TextStyle(
-        color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2SemiBold,
-      ),
-      headlineSmall: TextStyle(
-        color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2SemiBold,
       ),
       titleLarge: TextStyle(
-        color: AppColors.primaryTextColor,
         fontFamily: AppFonts.family2SemiBold,
-      ),
-      titleMedium: TextStyle(
+        fontSize: 22,
+        letterSpacing: -0.5,
         color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2Medium,
-      ),
-      titleSmall: TextStyle(
-        color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2Medium,
       ),
       bodyLarge: TextStyle(
-        color: AppColors.primaryTextColor,
         fontFamily: AppFonts.family2Regular,
+        fontSize: 16,
+        letterSpacing: 0.15,
+        color: AppColors.primaryTextColor,
       ),
       bodyMedium: TextStyle(
-        color: AppColors.primaryTextColor,
         fontFamily: AppFonts.family2Regular,
-      ),
-      bodySmall: TextStyle(
-        color: AppColors.secondaryTextColor,
-        fontFamily: AppFonts.family2Regular,
-      ),
-      labelLarge: TextStyle(
+        fontSize: 14,
+        letterSpacing: 0.25,
         color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2Medium,
-      ),
-      labelMedium: TextStyle(
-        color: AppColors.primaryTextColor,
-        fontFamily: AppFonts.family2Medium,
-      ),
-      labelSmall: TextStyle(
-        color: AppColors.secondaryTextColor,
-        fontFamily: AppFonts.family2Regular,
       ),
     ),
     iconTheme: const IconThemeData(
